@@ -33,8 +33,10 @@ jobs:
       - name: E2E Frontend (Cypress)
         working-directory: frontend
         run: |
-          npm run dev & npx wait-on http://localhost:5173
-          npx cypress run
+          npm run dev &
+          npx wait-on http://localhost:5173 --timeout 30000
+          npx cypress run --browser chrome --headless
+          pkill -f "vite" || true
 
       # Backend
       - name: Install Backend
@@ -70,10 +72,16 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
+          if [ -z "$SONAR_HOST_URL" ] || [ -z "$SONAR_TOKEN" ]; then
+            echo "⚠️ SonarQube secrets no configurados. Saltando análisis de calidad."
+            exit 0
+          fi
           npm i -D sonarqube-scanner
           echo "sonar.projectKey=proyecto-ci" > sonar-project.properties
           echo "sonar.host.url=${SONAR_HOST_URL}" >> sonar-project.properties
           echo "sonar.login=${SONAR_TOKEN}" >> sonar-project.properties
+          echo "sonar.sources=frontend/src,backend/src" >> sonar-project.properties
+          echo "sonar.tests=frontend/src,backend/tests" >> sonar-project.properties
           npx sonar-scanner
 
       - name: Security Analysis Note
