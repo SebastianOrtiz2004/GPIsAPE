@@ -1,0 +1,6 @@
+projectKey=ProyectoAPE
+serverUrl=http://localhost:9000
+serverVersion=25.9.0.112764
+dashboardUrl=http://localhost:9000/dashboard?id=ProyectoAPE
+ceTaskId=8447a19b-8fdf-4ed1-b6c0-880206d17c4f
+ceTaskUrl=http://localhost:9000/api/ce/task?id=8447a19b-8fdf-4ed1-b6c0-880206d17c4f
